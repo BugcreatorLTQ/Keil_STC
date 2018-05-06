@@ -7,6 +7,7 @@ sbit L1=P1^3;	//	left	+
 //Sensor Bleak-1
 sbit Sen_L=P1^5;//	sensor left
 sbit Sen_R=P1^6;//	sensor right
+sbit S1=P0^1;	//	1-no Obstacles
 
 void Sleep()
 {
@@ -61,10 +62,9 @@ void Stop()
 	P2=~16;
 	Sleep();
 }  
-void main()
-{		 
-	Stop();
-	while(1){	   
+	 
+void Runing()
+{		      
 	if(Sen_L==1&&Sen_R==1)
 		Run();
 	else if(Sen_R==1&&Sen_L==0)
@@ -73,5 +73,16 @@ void main()
 		TurnRight();
 	else if(Sen_R==0&&Sen_L==0)
 		Down();
+}
+
+void main()
+{		 
+	Stop();
+	while(1){
+		if(S1==1)
+			Runing();
+		else
+			Stop();
+		Sleep();
 	}
 }					

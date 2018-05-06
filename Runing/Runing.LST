@@ -1,4 +1,4 @@
-C51 COMPILER V9.01   RUNING                                                                05/04/2018 13:57:00 PAGE 1   
+C51 COMPILER V9.01   RUNING                                                                05/06/2018 16:08:49 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE RUNING
@@ -11,18 +11,18 @@ line level    source
    2                                                                  
    3          sbit R2=P1^0;   //      right   -
    4          sbit R1=P1^1;   //      right   +
-   5          sbit L1=P1^2;   //      left    -                         
-   6          sbit L2=P1^3;   //      left    +
+   5          sbit L2=P1^2;   //      left    -                         
+   6          sbit L1=P1^3;   //      left    +
    7          //Sensor Bleak-1
    8          sbit Sen_L=P1^5;//      sensor left
-   9          sbit Sen_R=P1^4;//      sensor right
-  10          
-  11          void Sleep(unsigned char z)
-  12          {
-  13   1              unsigned char i,j;
-  14   1              for(i=0;i<200;i++)
-  15   1              for(j=0;j<100;j++)
-  16   1              while(z--);
+   9          sbit Sen_R=P1^6;//      sensor right
+  10          sbit S1=P0^1;   //      1-no Obstacles
+  11          
+  12          void Sleep()
+  13          {
+  14   1              unsigned char i,j;
+  15   1              for(i=0;i<255;i++)
+  16   1              for(j=0;j<255;j++) ;
   17   1      }
   18          
   19          void Run()
@@ -32,76 +32,75 @@ line level    source
   23   1              R2=1;
   24   1              L2=1;
   25   1              P2=~1;
-  26   1      
-  27   1      }
-  28          void TurnLeft()
-  29          {
-  30   1              R1=0;
-  31   1              L1=1;                                                                                                                                                                                                                                                                                                     
-  32   1              R2=1;
-  33   1              L2=0;
-  34   1              P2=~2;
-  35   1      }
-  36          void TurnRight()
-  37          {
-  38   1              R1=1;
-  39   1              R2=0;
-  40   1              L1=0;
-  41   1              L2=1;
-  42   1              P2=~4;
-  43   1      }
-  44          void Down()
-  45          {
-  46   1              R1=1;
-  47   1              R2=0;
-  48   1              L1=1;
-  49   1              L2=0; 
-  50   1              P2=~8;
-  51   1      }          
-  52          void Stop()
-  53          {
-  54   1              R1=1;
-  55   1              R2=1;
-C51 COMPILER V9.01   RUNING                                                                05/04/2018 13:57:00 PAGE 2   
+  26   1              Sleep();
+  27   1      
+  28   1      }
+  29          void TurnLeft()
+  30          {
+  31   1              R1=0;
+  32   1              L1=1;                                                                                                                                                                                                                                                                                                     
+  33   1              R2=1;
+  34   1              L2=0;
+  35   1              P2=~2;
+  36   1              Sleep();
+  37   1      }
+  38          void TurnRight()
+  39          {
+  40   1              R1=1;
+  41   1              R2=0;
+  42   1              L1=0;
+  43   1              L2=1;
+  44   1              P2=~4;
+  45   1              Sleep();
+  46   1      }
+  47          void Down()
+  48          {
+  49   1              R1=1;
+  50   1              R2=0;
+  51   1              L1=1;
+  52   1              L2=0; 
+  53   1              P2=~8;
+  54   1              Sleep();
+  55   1      }          
+C51 COMPILER V9.01   RUNING                                                                05/06/2018 16:08:49 PAGE 2   
 
-  56   1              L1=1;
-  57   1              L2=1;
-  58   1              P2=~16;
-  59   1      }  
-  60          void main()
-  61          {                
-  62   1              Stop();
-  63   1              while(1){          
-  64   2                      R1=0;
-  65   2                      R2=1;
-  66   2                      L1=1;
-  67   2                      L2=1;
-  68   2                      P2=~1;
-  69   2                      Sleep(1);          
-  70   2                      R1=1;
-  71   2                      R2=0;
-  72   2                      L1=1;
-  73   2                      L2=1;
-  74   2                      P2=~2;
-  75   2                      Sleep(1);          
-  76   2                      R1=1;
-  77   2                      R2=1;
-  78   2                      L1=0;
-  79   2                      L2=1;
-  80   2                      P2=~4;
-  81   2                      Sleep(1);          
-  82   2                      R1=1;
-  83   2                      R2=1;
-  84   2                      L1=1;
-  85   2                      L2=0;
-  86   2                      P2=~8;
-  87   2                      Sleep(1);
-  88   2              }
-  89   1      }                                       
+  56          void Stop()
+  57          {
+  58   1              R1=1;
+  59   1              R2=1;
+  60   1              L1=1;
+  61   1              L2=1;
+  62   1              P2=~16;
+  63   1              Sleep();
+  64   1      }  
+  65                   
+  66          void Runing()
+  67          {                     
+  68   1              if(Sen_L==1&&Sen_R==1)
+  69   1                      Run();
+  70   1              else if(Sen_R==1&&Sen_L==0)
+  71   1                      TurnLeft();
+  72   1              else if(Sen_R==0&&Sen_L==1)
+  73   1                      TurnRight();
+  74   1              else if(Sen_R==0&&Sen_L==0)
+  75   1                      Down();
+  76   1      }
+  77          
+  78          void main()
+  79          {                
+  80   1              Stop();
+  81   1              while(1){
+  82   2                      if(S1==1)
+  83   2                              Runing();
+  84   2                      else
+  85   2                              Stop();
+  86   2                      Sleep();
+  87   2              }
+  88   1      }                                       
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    148    ----
+   CODE SIZE        =    139    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

@@ -206,8 +206,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>45</TopLine>
-      <CurrentLine>45</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Runing.c</PathWithFileName>
       <FilenameWithoutPath>Runing.c</FilenameWithoutPath>
@@ -1560,8 +1560,8 @@
         <Doc>
           <Name>.\Runing.c</Name>
           <ColumnNumber>0</ColumnNumber>
-          <TopLine>45</TopLine>
-          <CurrentLine>45</CurrentLine>
+          <TopLine>1</TopLine>
+          <CurrentLine>1</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>
