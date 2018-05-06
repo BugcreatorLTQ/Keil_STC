@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        05/04/2018  21:16:21  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        05/06/2018  13:23:04  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -26,8 +26,9 @@ LINK MAP OF MODULE:  Example (EXAMPLE)
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
                     0003H     07FDH                  *** GAP ***
-            CODE    0800H     0015H     UNIT         ?PR?MAIN?EXAMPLE
-            CODE    0815H     000CH     UNIT         ?C_C51STARTUP
+            CODE    0800H     0018H     UNIT         ?PR?_SLEEP?EXAMPLE
+            CODE    0818H     0015H     UNIT         ?PR?MAIN?EXAMPLE
+            CODE    082DH     000CH     UNIT         ?C_C51STARTUP
 
 
 
@@ -49,36 +50,54 @@ SYMBOL TABLE OF MODULE:  Example (EXAMPLE)
 
   -------         MODULE        EXAMPLE
   C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
   D:0090H         PUBLIC        P1
   D:00A0H         PUBLIC        P2
   D:00B0H         PUBLIC        P3
-  B:00A0H.0       PUBLIC        S1
+  B:0080H.1       PUBLIC        S1
   D:00A8H         PUBLIC        IE
   D:00B8H         PUBLIC        IP
-  C:0800H         PUBLIC        main
+  C:0818H         PUBLIC        main
   D:0098H         PUBLIC        SCON
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/06/2018  13:23:04  PAGE 2
+
+
   D:0088H         PUBLIC        TCON
   D:00C8H         PUBLIC        T2CON
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/04/2018  21:16:21  PAGE 2
-
-
   D:00D0H         PUBLIC        PSW
-  -------         PROC          MAIN
+  C:0800H         PUBLIC        _Sleep
+  -------         PROC          _SLEEP
+  D:0007H         SYMBOL        z
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0005H         SYMBOL        j
+  -------         ENDDO         
   C:0800H         LINE#         5
   C:0800H         LINE#         6
-  C:0800H         LINE#         7
   C:0800H         LINE#         8
-  C:0803H         LINE#         9
-  C:0808H         LINE#         10
-  C:080BH         LINE#         11
-  C:0810H         LINE#         13
-  C:0813H         LINE#         14
+  C:0806H         LINE#         9
+  C:080EH         LINE#         10
+  C:0817H         LINE#         11
+  -------         ENDPROC       _SLEEP
+  -------         PROC          MAIN
+  C:0818H         LINE#         13
+  C:0818H         LINE#         14
+  C:0818H         LINE#         15
+  C:0818H         LINE#         16
+  C:081BH         LINE#         17
+  C:0820H         LINE#         18
+  C:0823H         LINE#         19
+  C:0828H         LINE#         21
+  C:082BH         LINE#         22
   -------         ENDPROC       MAIN
   -------         ENDMOD        EXAMPLE
 
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SLEEP?EXAMPLE
+
 ******************************************************************************
-* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0015H BYTE ( 1%) *
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 002DH BYTE ( 2%) *
 ******************************************************************************
 
-Program Size: data=9.0 xdata=0 code=36
-LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
+Program Size: data=9.0 xdata=0 code=60
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

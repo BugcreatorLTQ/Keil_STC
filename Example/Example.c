@@ -1,6 +1,14 @@
 #include<reg52.h>
 							
-sbit S1=P2^0;	//光电
+sbit S1=P0^1;	//光电
+						
+void Sleep(unsigned char z)
+{
+	unsigned char i,j;
+	while(z--)
+		for(i=0;i<255;i++)
+			for(j=0;j<255;j++);
+}
 
 void main()
 {		 
@@ -8,8 +16,8 @@ void main()
 		if(S1==1)
 			P2=~1;
 		else if(S1==0)
-			P2=~2;
+			P2=~4;
 		else
-			P2=~4;		
+			P2=~0;
 	}
 }					

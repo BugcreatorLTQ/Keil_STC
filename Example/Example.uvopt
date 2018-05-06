@@ -175,7 +175,7 @@
       <ColumnNumber>9</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>1</TopLine>
-      <CurrentLine>13</CurrentLine>
+      <CurrentLine>21</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Example.c</PathWithFileName>
       <FilenameWithoutPath>Example.c</FilenameWithoutPath>
@@ -1529,7 +1529,7 @@
           <Name>.\Example.c</Name>
           <ColumnNumber>9</ColumnNumber>
           <TopLine>1</TopLine>
-          <CurrentLine>13</CurrentLine>
+          <CurrentLine>21</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>
