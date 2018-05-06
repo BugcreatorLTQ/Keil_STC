@@ -1,0 +1,114 @@
+C51 COMPILER V9.01   RUNING                                                                05/04/2018 13:57:00 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE RUNING
+OBJECT MODULE PLACED IN Runing.OBJ
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Runing.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h>
+   2                                                                  
+   3          sbit R2=P1^0;   //      right   -
+   4          sbit R1=P1^1;   //      right   +
+   5          sbit L1=P1^2;   //      left    -                         
+   6          sbit L2=P1^3;   //      left    +
+   7          //Sensor Bleak-1
+   8          sbit Sen_L=P1^5;//      sensor left
+   9          sbit Sen_R=P1^4;//      sensor right
+  10          
+  11          void Sleep(unsigned char z)
+  12          {
+  13   1              unsigned char i,j;
+  14   1              for(i=0;i<200;i++)
+  15   1              for(j=0;j<100;j++)
+  16   1              while(z--);
+  17   1      }
+  18          
+  19          void Run()
+  20          {
+  21   1              R1=0;
+  22   1              L1=0; 
+  23   1              R2=1;
+  24   1              L2=1;
+  25   1              P2=~1;
+  26   1      
+  27   1      }
+  28          void TurnLeft()
+  29          {
+  30   1              R1=0;
+  31   1              L1=1;                                                                                                                                                                                                                                                                                                     
+  32   1              R2=1;
+  33   1              L2=0;
+  34   1              P2=~2;
+  35   1      }
+  36          void TurnRight()
+  37          {
+  38   1              R1=1;
+  39   1              R2=0;
+  40   1              L1=0;
+  41   1              L2=1;
+  42   1              P2=~4;
+  43   1      }
+  44          void Down()
+  45          {
+  46   1              R1=1;
+  47   1              R2=0;
+  48   1              L1=1;
+  49   1              L2=0; 
+  50   1              P2=~8;
+  51   1      }          
+  52          void Stop()
+  53          {
+  54   1              R1=1;
+  55   1              R2=1;
+C51 COMPILER V9.01   RUNING                                                                05/04/2018 13:57:00 PAGE 2   
+
+  56   1              L1=1;
+  57   1              L2=1;
+  58   1              P2=~16;
+  59   1      }  
+  60          void main()
+  61          {                
+  62   1              Stop();
+  63   1              while(1){          
+  64   2                      R1=0;
+  65   2                      R2=1;
+  66   2                      L1=1;
+  67   2                      L2=1;
+  68   2                      P2=~1;
+  69   2                      Sleep(1);          
+  70   2                      R1=1;
+  71   2                      R2=0;
+  72   2                      L1=1;
+  73   2                      L2=1;
+  74   2                      P2=~2;
+  75   2                      Sleep(1);          
+  76   2                      R1=1;
+  77   2                      R2=1;
+  78   2                      L1=0;
+  79   2                      L2=1;
+  80   2                      P2=~4;
+  81   2                      Sleep(1);          
+  82   2                      R1=1;
+  83   2                      R2=1;
+  84   2                      L1=1;
+  85   2                      L2=0;
+  86   2                      P2=~8;
+  87   2                      Sleep(1);
+  88   2              }
+  89   1      }                                       
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    148    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,229 @@
+C51 COMPILER V9.01   MAIN                                                                  05/03/2018 18:25:15 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          typedef unsigned int uint;
+   3          typedef unsigned char uchar;
+   4          #define S1  P3 ^ 2      //
+   5          sbit R1 = P1 ^ 1; //    right   +
+   6          sbit R2 = P1 ^ 0; //    right   -
+   7          sbit L1 = P1 ^ 2; //    left    +
+   8          sbit L2 = P1 ^ 3; //    left    -
+   9          //Sensor Bleak-1
+  10          sbit Sen_L = P1 ^ 5; // sensor left
+  11          sbit Sen_R = P1 ^ 4; // sensor right
+  12          sbit pwm1 = P0 ^ 1;  //输出PWM信号
+  13          sbit pwm2 = P0 ^ 3;
+  14          uint pwm_value = 1500; //初值为1.5ms
+  15          uchar flag = 0;        //Flag
+  16          
+  17          void delay_ms(uint x)
+  18          {
+  19   1          uint i;
+  20   1          while (x--)
+  21   1              for (i = 0; i < 125; i++)
+  22   1                  ;
+  23   1      }
+  24          
+  25          void InitTimer(void)
+  26          {
+  27   1          TMOD = 0x11;        //开定时器0,1
+  28   1          TH0 = -20000 / 256; //定时20MS,20MS为一个周期
+  29   1          TL0 = -20000 % 256;
+  30   1          TH1 = -1500 / 256; //定时1.5MS,这时舵机处于0度
+  31   1          TL1 = -1500 % 256;
+  32   1          EA = 1;  //开总断
+  33   1          TR0 = 1; //开定时器0
+  34   1          ET0 = 1;
+  35   1          TR1 = 1; //开定时器1
+  36   1          ET1 = 1;
+  37   1      }
+  38          
+  39          void timer0(void) interrupt 1 //定时器0中断函数
+  40          {
+  41   1          switch (flag)
+  42   1          {
+  43   2          case 1:
+  44   2              pwm1 = 1;
+  45   2              break;
+  46   2          case 2:
+  47   2              pwm2 = 1;
+  48   2              break;
+  49   2          }
+  50   1          TH0 = -20000 / 256;
+  51   1          TL0 = -20000 % 256;
+  52   1          TR1 = 1;
+  53   1      }
+  54          
+  55          void timer1(void) interrupt 3 //定时器1中断函数
+C51 COMPILER V9.01   MAIN                                                                  05/03/2018 18:25:15 PAGE 2   
+
+  56          {
+  57   1          switch (flag)
+  58   1          {
+  59   2          case 1:
+  60   2              pwm1 = 0;
+  61   2              break;
+  62   2          case 2:
+  63   2              pwm2 = 0;
+  64   2              break;
+  65   2          }
+  66   1          TH1 = -pwm_value / 256;
+  67   1          TL1 = -pwm_value % 256;
+  68   1          TR1 = 0;
+  69   1      }
+  70          
+  71          void Stop(unsigned char type)
+  72          {
+  73   1          unsigned char i;
+  74   1          for (i = 0; i < 5; i++)
+  75   1          {
+  76   2              switch (type)
+  77   2              {
+  78   3              case 1:
+  79   3                  pwm_value = 2500;
+  80   3                  break;
+  81   3              case 2:
+  82   3                  pwm_value = 2250;
+  83   3                  break;
+  84   3              case 3:
+  85   3                  pwm_value = 2000;
+  86   3                  break;
+  87   3              case 4:
+  88   3                  pwm_value = 1750;
+  89   3                  break;
+  90   3              case 5:
+  91   3                  pwm_value = 1500;
+  92   3                  break;
+  93   3              case 6:
+  94   3                  pwm_value = 1250;
+  95   3                  break;
+  96   3              case 7:
+  97   3                  pwm_value = 1000;
+  98   3                  break;
+  99   3              case 8:
+ 100   3                  pwm_value = 750;
+ 101   3                  break;
+ 102   3              case 9:
+ 103   3                  pwm_value = 500;
+ 104   3                  break;
+ 105   3              }
+ 106   2              delay_ms(1000);
+ 107   2          }
+ 108   1      }
+ 109          
+ 110          void Sleep(unsigned char z)
+ 111          {
+ 112   1          unsigned char i, j;
+ 113   1          for (i = 0; i < 255; i++)
+ 114   1              for (j = 0; j < 255; j++)
+ 115   1                  while (z--)
+ 116   1                      ;
+ 117   1      }
+C51 COMPILER V9.01   MAIN                                                                  05/03/2018 18:25:15 PAGE 3   
+
+ 118          
+ 119          void Run()
+ 120          {
+ 121   1          R1 = 0;
+ 122   1          L1 = 0;
+ 123   1          R2 = 1;
+ 124   1          L2 = 1;
+ 125   1          P2 = ~1;
+ 126   1      }
+ 127          void TurnLeft()
+ 128          {
+ 129   1          R1 = 0;
+ 130   1          L1 = 1;
+ 131   1          R2 = 1;
+ 132   1          L2 = 0;
+ 133   1          P2 = ~2;
+ 134   1      }
+ 135          void TurnRight()
+ 136          {
+ 137   1          R1 = 1;
+ 138   1          R2 = 0;
+ 139   1          L1 = 0;
+ 140   1          L2 = 1;
+ 141   1          P2 = ~4;
+ 142   1      }
+ 143          void Down()
+ 144          {
+ 145   1          R1 = 1;
+ 146   1          R2 = 0;
+ 147   1          L1 = 1;
+ 148   1          L2 = 0;
+ 149   1          P2 = ~8;
+ 150   1      }
+ 151          void CarStop()
+ 152          {
+ 153   1          R1 = 1;
+ 154   1          R2 = 1;
+ 155   1          L1 = 1;
+ 156   1          L2 = 1;
+ 157   1          P2 = ~16;
+ 158   1      }
+ 159          
+ 160          void main(void) //主函数
+ 161          {
+ 162   1          InitTimer();
+ 163   1          pwm_value = 1500;
+ 164   1          flag = 0;
+ 165   1          flag = 2;
+ 166   1          Stop(5); //UD舵机D位(45)
+ 167   1          flag = 1;
+ 168   1          Stop(8); //LR舵机M位
+ 169   1          CarStop();
+ 170   1          while (1)
+ 171   1          {
+ 172   2              if(S1==1){
+ 173   3                      P2=~32;
+ 174   3              if (Sen_L == 0 && Sen_R == 0)
+ 175   3                  Run();
+ 176   3              else if (Sen_L == 1 && Sen_R == 0)
+ 177   3                  TurnRight();
+ 178   3              else if (Sen_L == 0 && Sen_R == 1)
+ 179   3                  TurnLeft();
+C51 COMPILER V9.01   MAIN                                                                  05/03/2018 18:25:15 PAGE 4   
+
+ 180   3              else
+ 181   3                  Down();
+ 182   3              Sleep(1);
+ 183   3              }
+ 184   2              else if(S1==0){
+ 185   3                      P2=~64;
+ 186   3              flag = 1;
+ 187   3              Stop(5); //LR舵机R位
+ 188   3              flag = 2;
+ 189   3              Stop(4); //UD舵机D位
+ 190   3              flag = 2;
+ 191   3              Stop(7); //UD舵机U位
+ 192   3              flag = 1;
+ 193   3              Stop(8); //LR舵机M位
+ 194   3              flag = 2;
+ 195   3              Stop(5); //UD舵机D位(45)
+ 196   3              flag = 2;
+ 197   3              Stop(7); //UD舵机U位
+ 198   3                      }
+ 199   2          }
+ 200   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    487    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
