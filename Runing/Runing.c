@@ -63,15 +63,17 @@ void Stop()
 	Sleep();
 }  
 	 
-void Runing()
+void Runing(unsigned char type)
 {		      
-	if(Sen_L==1&&Sen_R==1)
+	//type=1 black
+
+	if(Sen_L==0&&Sen_R==0)
 		Run();
-	else if(Sen_R==1&&Sen_L==0)
-		TurnLeft();
 	else if(Sen_R==0&&Sen_L==1)
+		TurnLeft();
+	else if(Sen_R==1&&Sen_L==0)
 		TurnRight();
-	else if(Sen_R==0&&Sen_L==0)
+	else if(Sen_R==1&&Sen_L==1)
 		Down();
 }
 

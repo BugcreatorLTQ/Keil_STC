@@ -1,4 +1,4 @@
-C51 COMPILER V9.01   MAIN                                                                  05/03/2018 18:25:15 PAGE 1   
+C51 COMPILER V9.01   MAIN                                                                  05/06/2018 22:54:34 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
@@ -10,7 +10,7 @@ line level    source
    1          #include <reg52.h>
    2          typedef unsigned int uint;
    3          typedef unsigned char uchar;
-   4          #define S1  P3 ^ 2      //
+   4          /*
    5          sbit R1 = P1 ^ 1; //    right   +
    6          sbit R2 = P1 ^ 0; //    right   -
    7          sbit L1 = P1 ^ 2; //    left    +
@@ -18,205 +18,234 @@ line level    source
    9          //Sensor Bleak-1
   10          sbit Sen_L = P1 ^ 5; // sensor left
   11          sbit Sen_R = P1 ^ 4; // sensor right
-  12          sbit pwm1 = P0 ^ 1;  //输出PWM信号
-  13          sbit pwm2 = P0 ^ 3;
-  14          uint pwm_value = 1500; //初值为1.5ms
-  15          uchar flag = 0;        //Flag
-  16          
-  17          void delay_ms(uint x)
-  18          {
-  19   1          uint i;
-  20   1          while (x--)
-  21   1              for (i = 0; i < 125; i++)
-  22   1                  ;
-  23   1      }
-  24          
-  25          void InitTimer(void)
-  26          {
-  27   1          TMOD = 0x11;        //开定时器0,1
-  28   1          TH0 = -20000 / 256; //定时20MS,20MS为一个周期
-  29   1          TL0 = -20000 % 256;
-  30   1          TH1 = -1500 / 256; //定时1.5MS,这时舵机处于0度
-  31   1          TL1 = -1500 % 256;
-  32   1          EA = 1;  //开总断
-  33   1          TR0 = 1; //开定时器0
-  34   1          ET0 = 1;
-  35   1          TR1 = 1; //开定时器1
-  36   1          ET1 = 1;
-  37   1      }
-  38          
-  39          void timer0(void) interrupt 1 //定时器0中断函数
-  40          {
-  41   1          switch (flag)
-  42   1          {
-  43   2          case 1:
-  44   2              pwm1 = 1;
-  45   2              break;
-  46   2          case 2:
-  47   2              pwm2 = 1;
+  12          */
+  13          sbit K=P0 ^ 7;
+  14          sbit S1 = P0^1; 
+  15          sbit pwm1 = P0 ^ 5;  //输出PWM信号
+  16          sbit pwm2 = P0 ^ 3;
+  17          uint pwm_value = 1500; //初值为1.5ms
+  18          uchar flag = 0;        //Flag
+  19          
+  20          void delay_ms(uint x)
+  21          {
+  22   1          uint i;
+  23   1          while (x--)
+  24   1              for (i = 0; i < 125; i++)
+  25   1                  ;
+  26   1      }
+  27          
+  28          void InitTimer(void)
+  29          {
+  30   1          TMOD = 0x11;        //开定时器0,1
+  31   1          TH0 = -20000 / 256; //定时20MS,20MS为一个周期
+  32   1          TL0 = -20000 % 256;
+  33   1          TH1 = -1500 / 256; //定时1.5MS,这时舵机处于0度
+  34   1          TL1 = -1500 % 256;
+  35   1          EA = 1;  //开总断
+  36   1          TR0 = 1; //开定时器0
+  37   1          ET0 = 1;
+  38   1          TR1 = 1; //开定时器1
+  39   1          ET1 = 1;
+  40   1      }
+  41          
+  42          void timer0(void) interrupt 1 //定时器0中断函数
+  43          {
+  44   1          switch (flag)
+  45   1          {
+  46   2          case 1:
+  47   2              pwm1 = 1;
   48   2              break;
-  49   2          }
-  50   1          TH0 = -20000 / 256;
-  51   1          TL0 = -20000 % 256;
-  52   1          TR1 = 1;
-  53   1      }
-  54          
-  55          void timer1(void) interrupt 3 //定时器1中断函数
-C51 COMPILER V9.01   MAIN                                                                  05/03/2018 18:25:15 PAGE 2   
+  49   2          case 2:
+  50   2              pwm2 = 1;
+  51   2              break;
+  52   2              case 3:
+  53   2                      K = 1;
+  54   2                      break;
+  55   2              case 4:
+C51 COMPILER V9.01   MAIN                                                                  05/06/2018 22:54:34 PAGE 2   
 
-  56          {
-  57   1          switch (flag)
-  58   1          {
-  59   2          case 1:
-  60   2              pwm1 = 0;
-  61   2              break;
-  62   2          case 2:
-  63   2              pwm2 = 0;
-  64   2              break;
-  65   2          }
-  66   1          TH1 = -pwm_value / 256;
-  67   1          TL1 = -pwm_value % 256;
-  68   1          TR1 = 0;
-  69   1      }
-  70          
-  71          void Stop(unsigned char type)
-  72          {
-  73   1          unsigned char i;
-  74   1          for (i = 0; i < 5; i++)
-  75   1          {
-  76   2              switch (type)
-  77   2              {
-  78   3              case 1:
-  79   3                  pwm_value = 2500;
-  80   3                  break;
-  81   3              case 2:
-  82   3                  pwm_value = 2250;
-  83   3                  break;
-  84   3              case 3:
-  85   3                  pwm_value = 2000;
-  86   3                  break;
-  87   3              case 4:
-  88   3                  pwm_value = 1750;
-  89   3                  break;
-  90   3              case 5:
-  91   3                  pwm_value = 1500;
-  92   3                  break;
-  93   3              case 6:
-  94   3                  pwm_value = 1250;
-  95   3                  break;
-  96   3              case 7:
-  97   3                  pwm_value = 1000;
-  98   3                  break;
-  99   3              case 8:
- 100   3                  pwm_value = 750;
- 101   3                  break;
- 102   3              case 9:
- 103   3                  pwm_value = 500;
- 104   3                  break;
- 105   3              }
- 106   2              delay_ms(1000);
- 107   2          }
- 108   1      }
- 109          
- 110          void Sleep(unsigned char z)
- 111          {
- 112   1          unsigned char i, j;
- 113   1          for (i = 0; i < 255; i++)
- 114   1              for (j = 0; j < 255; j++)
- 115   1                  while (z--)
- 116   1                      ;
- 117   1      }
-C51 COMPILER V9.01   MAIN                                                                  05/03/2018 18:25:15 PAGE 3   
+  56   2                      pwm2=1;
+  57   2                      K=1;
+  58   2                      break;
+  59   2              case 5:
+  60   2                      pwm1=1;
+  61   2                      K=1;
+  62   2                      break;
+  63   2          }
+  64   1          TH0 = -20000 / 256;
+  65   1          TL0 = -20000 % 256;
+  66   1          TR1 = 1;
+  67   1      }
+  68          
+  69          
+  70          void timer1(void) interrupt 3 //定时器1中断函数
+  71          {
+  72   1          switch (flag)
+  73   1          {
+  74   2          case 1:
+  75   2              pwm1 = 0;
+  76   2              break;
+  77   2          case 2:
+  78   2              pwm2 = 0;
+  79   2              break;
+  80   2              case 3:
+  81   2                      K = 0;
+  82   2                      break;     
+  83   2              case 4:
+  84   2                      pwm2=0;
+  85   2                      K=0;
+  86   2                      break;
+  87   2              case 5:
+  88   2                      pwm1=0;
+  89   2                      K=0;
+  90   2                      break;
+  91   2          }
+  92   1          TH1 = -pwm_value / 256;
+  93   1          TL1 = -pwm_value % 256;
+  94   1          TR1 = 0;
+  95   1      }
+  96          
+  97          void Stop(unsigned char type)
+  98          {
+  99   1          unsigned char i;
+ 100   1          for (i = 0; i < 5; i++)
+ 101   1          {
+ 102   2                      pwm_value=(uint)(2750-250*type);
+ 103   2              delay_ms(1000);
+ 104   2          }
+ 105   1      }
+ 106          /*
+ 107          void Sleep(unsigned char z)
+ 108          {
+ 109              unsigned char i, j;
+ 110              for (i = 0; i < 255; i++)
+ 111                  for (j = 0; j < 255; j++)
+ 112                      while (z--)
+ 113                          ;
+ 114          }
+ 115          
+ 116          void Run()
+ 117          {
+C51 COMPILER V9.01   MAIN                                                                  05/06/2018 22:54:34 PAGE 3   
 
- 118          
- 119          void Run()
- 120          {
- 121   1          R1 = 0;
- 122   1          L1 = 0;
- 123   1          R2 = 1;
- 124   1          L2 = 1;
- 125   1          P2 = ~1;
- 126   1      }
- 127          void TurnLeft()
- 128          {
- 129   1          R1 = 0;
- 130   1          L1 = 1;
- 131   1          R2 = 1;
- 132   1          L2 = 0;
- 133   1          P2 = ~2;
- 134   1      }
- 135          void TurnRight()
- 136          {
- 137   1          R1 = 1;
- 138   1          R2 = 0;
- 139   1          L1 = 0;
- 140   1          L2 = 1;
- 141   1          P2 = ~4;
- 142   1      }
- 143          void Down()
- 144          {
- 145   1          R1 = 1;
- 146   1          R2 = 0;
- 147   1          L1 = 1;
- 148   1          L2 = 0;
- 149   1          P2 = ~8;
- 150   1      }
- 151          void CarStop()
- 152          {
- 153   1          R1 = 1;
- 154   1          R2 = 1;
- 155   1          L1 = 1;
- 156   1          L2 = 1;
- 157   1          P2 = ~16;
- 158   1      }
- 159          
- 160          void main(void) //主函数
- 161          {
- 162   1          InitTimer();
- 163   1          pwm_value = 1500;
- 164   1          flag = 0;
- 165   1          flag = 2;
- 166   1          Stop(5); //UD舵机D位(45)
- 167   1          flag = 1;
- 168   1          Stop(8); //LR舵机M位
- 169   1          CarStop();
- 170   1          while (1)
- 171   1          {
- 172   2              if(S1==1){
- 173   3                      P2=~32;
- 174   3              if (Sen_L == 0 && Sen_R == 0)
- 175   3                  Run();
- 176   3              else if (Sen_L == 1 && Sen_R == 0)
- 177   3                  TurnRight();
- 178   3              else if (Sen_L == 0 && Sen_R == 1)
- 179   3                  TurnLeft();
-C51 COMPILER V9.01   MAIN                                                                  05/03/2018 18:25:15 PAGE 4   
+ 118              R1 = 0;
+ 119              L1 = 0;
+ 120              R2 = 1;
+ 121              L2 = 1;
+ 122              P2 = ~3;
+ 123          }
+ 124          void TurnLeft()
+ 125          {
+ 126              R1 = 0;
+ 127              L1 = 1;
+ 128              R2 = 1;
+ 129              L2 = 0;
+ 130              P2 = ~5;
+ 131          }
+ 132          void TurnRight()
+ 133          {
+ 134              R1 = 1;
+ 135              R2 = 0;
+ 136              L1 = 0;
+ 137              L2 = 1;
+ 138              P2 = ~9;
+ 139          }
+ 140          void Down()
+ 141          {
+ 142              R1 = 1;
+ 143              R2 = 0;
+ 144              L1 = 1;
+ 145              L2 = 0;
+ 146              P2 = ~17;
+ 147          }
+ 148          void CarStop()
+ 149          {
+ 150              R1 = 1;
+ 151              R2 = 1;
+ 152              L1 = 1;
+ 153              L2 = 1;
+ 154              P2 = ~33;
+ 155          }
+ 156                   
+ 157          void Runing()
+ 158          {
+ 159                  if (Sen_L == 0 && Sen_R == 0)
+ 160                          Run();
+ 161                  else if (Sen_L == 1 && Sen_R == 0)
+ 162                      TurnRight();
+ 163                  else if (Sen_L == 0 && Sen_R == 1)
+ 164                          TurnLeft();
+ 165                  else
+ 166                          Down();
+ 167                  Sleep(1);       
+ 168          }
+ 169          */
+ 170          void GetBall()
+ 171          {        
+ 172   1          flag = 1;
+ 173   1              P2=~4;
+ 174   1          Stop(5); //LR舵机R位
+ 175   1                                                                 
+ 176   1              flag=3;
+ 177   1              Stop(5); //open
+ 178   1      
+ 179   1          flag = 2;
+C51 COMPILER V9.01   MAIN                                                                  05/06/2018 22:54:34 PAGE 4   
 
- 180   3              else
- 181   3                  Down();
- 182   3              Sleep(1);
- 183   3              }
- 184   2              else if(S1==0){
- 185   3                      P2=~64;
- 186   3              flag = 1;
- 187   3              Stop(5); //LR舵机R位
- 188   3              flag = 2;
- 189   3              Stop(4); //UD舵机D位
- 190   3              flag = 2;
- 191   3              Stop(7); //UD舵机U位
- 192   3              flag = 1;
- 193   3              Stop(8); //LR舵机M位
- 194   3              flag = 2;
- 195   3              Stop(5); //UD舵机D位(45)
- 196   3              flag = 2;
- 197   3              Stop(7); //UD舵机U位
- 198   3                      }
- 199   2          }
- 200   1      }
+ 180   1              P2=~8;
+ 181   1          Stop(4); //UD舵机D位
+ 182   1      
+ 183   1              //--------------
+ 184   1              flag=3;
+ 185   1              Stop(8); //close
+ 186   1      
+ 187   1          flag = 4;
+ 188   1              P2=~16;
+ 189   1          Stop(8); //UD舵机U位
+ 190   1      
+ 191   1          flag = 5;
+ 192   1              P2=~32;
+ 193   1          Stop(8); //LR-M
+ 194   1      
+ 195   1          flag = 2;
+ 196   1              P2=~64;
+ 197   1          Stop(6); //UD舵机D位(45)
+ 198   1              
+ 199   1              flag=3;
+ 200   1              Stop(5); //open
+ 201   1      
+ 202   1          flag = 2;
+ 203   1              P2=~128;
+ 204   1          Stop(7); //UD舵机U位
+ 205   1      }
+ 206          
+ 207          
+ 208          void main(void) //主函数
+ 209          {               
+ 210   1              delay_ms(500);
+ 211   1          InitTimer();         
+ 212   1          pwm_value = 1500; 
+ 213   1          flag = 2;
+ 214   1              P2=~1;
+ 215   1          Stop(7); //UD舵机U位(45)
+ 216   1          flag = 1;
+ 217   1              P2=~2;
+ 218   1          Stop(8); //LR舵机M位
+ 219   1              P2=~4;  
+ 220   1              flag=3;
+ 221   1              Stop(7);        //open
+ 222   1          while (1)
+ 223   1          {
+ 224   2                      if(S1==0)
+ 225   2                              GetBall();
+ 226   2                      else
+ 227   2                              P2=~3;
+ 228   2          }
+ 229   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    487    ----
+   CODE SIZE        =    370    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
