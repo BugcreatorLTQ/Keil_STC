@@ -1,4 +1,4 @@
-C51 COMPILER V9.01   EXAMPLE                                                               05/06/2018 21:21:29 PAGE 1   
+C51 COMPILER V9.01   EXAMPLE                                                               05/10/2018 08:12:58 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE EXAMPLE
@@ -11,128 +11,129 @@ line level    source
    2          typedef unsigned int uint;
    3          typedef unsigned char uchar;
    4          sbit K = P0 ^ 7;        
-   5          sbit pwm1 = P0 ^ 5;  //???PWM?z?
-   6          sbit pwm2 = P0 ^ 3;
-   7          uint pwm_value = 1500; //????1.5ms
-   8          uchar flag = 0;        //Flag
-   9          
-  10          void delay_ms(uint x)
-  11          {
-  12   1          uint i;
-  13   1          while (x--)
-  14   1              for (i = 0; i < 125; i++)
-  15   1                  ;
-  16   1      }
-  17          
-  18          void InitTimer(void)
-  19          {
-  20   1          TMOD = 0x11;        //???????0,1
-  21   1          TH0 = -20000 / 256; //???20MS,20MS?h??????
-  22   1          TL0 = -20000 % 256;
-  23   1          TH1 = -1500 / 256; //???1.5MS,??????????0??
-  24   1          TL1 = -1500 % 256;
-  25   1          EA = 1;  //?????
-  26   1          TR0 = 1; //???????0
-  27   1          ET0 = 1;
-  28   1          TR1 = 1; //???????1
-  29   1          ET1 = 1;
-  30   1      }
-  31          
-  32          void timer0(void) interrupt 1 //?????0??????
-  33          {
-  34   1          switch (flag)
-  35   1          {
-  36   2          case 1:
-  37   2              pwm1 = 1;
-  38   2              break;
-  39   2          case 2:
-  40   2              pwm2 = 1;
-  41   2              break;
-  42   2              case 3:
-  43   2                      K = 1;
-  44   2                      break;
-  45   2          }
-  46   1          TH0 = -20000 / 256;
-  47   1          TL0 = -20000 % 256;
-  48   1          TR1 = 1;
-  49   1      }
-  50          
-  51          void timer1(void) interrupt 3 //?????1??????
-  52          {
-  53   1          switch (flag)
-  54   1          {
-  55   2          case 1:
-C51 COMPILER V9.01   EXAMPLE                                                               05/06/2018 21:21:29 PAGE 2   
+   5          sbit Sen_Rad = P3 ^ 4;
+   6          sbit pwm1 = P0 ^ 5;
+   7          sbit pwm2 = P0 ^ 3;
+   8          uint pwm_value = 1500; 
+   9          uchar flag = 0;        //Flag
+  10          
+  11          void delay_ms(uint x)
+  12          {
+  13   1          uint i;
+  14   1          while (x--)
+  15   1              for (i = 0; i < 125; i++)
+  16   1                  ;
+  17   1      }
+  18          
+  19          void InitTimer(void)
+  20          {
+  21   1          TMOD = 0x11;        
+  22   1          TH0 = -20000 / 256; 
+  23   1          TL0 = -20000 % 256;
+  24   1          TH1 = -1500 / 256; 
+  25   1          TL1 = -1500 % 256;
+  26   1          EA = 1;  
+  27   1          TR0 = 1; 
+  28   1          ET0 = 1;
+  29   1          TR1 = 1; 
+  30   1          ET1 = 1;
+  31   1      }
+  32          
+  33          void timer0(void) interrupt 1
+  34          {
+  35   1          switch (flag)
+  36   1          {
+  37   2          case 1:
+  38   2              pwm1 = 1;
+  39   2              break;
+  40   2          case 2:
+  41   2              pwm2 = 1;
+  42   2              break;
+  43   2              case 3:
+  44   2                      K = 1;
+  45   2                      break;
+  46   2          }
+  47   1          TH0 = -20000 / 256;
+  48   1          TL0 = -20000 % 256;
+  49   1          TR1 = 1;
+  50   1      }
+  51          
+  52          void timer1(void) interrupt 3 
+  53          {
+  54   1          switch (flag)
+  55   1          {
+C51 COMPILER V9.01   EXAMPLE                                                               05/10/2018 08:12:58 PAGE 2   
 
-  56   2              pwm1 = 0;
-  57   2              break;
-  58   2          case 2:
-  59   2              pwm2 = 0;
-  60   2              break;
-  61   2              case 3:
-  62   2                      K = 0;
-  63   2                      break;
-  64   2          }
-  65   1          TH1 = -pwm_value / 256;
-  66   1          TL1 = -pwm_value % 256;
-  67   1          TR1 = 0;
-  68   1      }
-  69          
-  70          void Stop(unsigned char type)
-  71          {
-  72   1          unsigned char i;
-  73   1          for (i = 0; i < 5; i++)
-  74   1          {
-  75   2                      pwm_value=(uint)(2750-250*type);
-  76   2              delay_ms(1000);
-  77   2          }
-  78   1      }
-  79          
-  80          void GetBall()
-  81          {        
-  82   1          flag = 1;
-  83   1              P2=~4;
-  84   1          Stop(5); //LR???R?
-  85   1          flag = 2;
-  86   1              P2=~8;
-  87   1          Stop(4); //UD???D?
-  88   1          flag = 2;
-  89   1              P2=~16;
-  90   1          Stop(7); //UD???U?
-  91   1          flag = 1;
-  92   1              P2=~32;
-  93   1          Stop(8); //LR???M?
-  94   1          flag = 2;
-  95   1              P2=~64;
-  96   1          Stop(5); //UD???D?(45)
-  97   1          flag = 2;
-  98   1              P2=~128;
-  99   1          Stop(7); //UD???U?
- 100   1      }
- 101          
+  56   2          case 1:
+  57   2              pwm1 = 0;
+  58   2              break;
+  59   2          case 2:
+  60   2              pwm2 = 0;
+  61   2              break;
+  62   2              case 3:
+  63   2                      K = 0;
+  64   2                      break;
+  65   2          }
+  66   1          TH1 = -pwm_value / 256;
+  67   1          TL1 = -pwm_value % 256;
+  68   1          TR1 = 0;
+  69   1      }
+  70          
+  71          void Stop(unsigned char type)
+  72          {
+  73   1          unsigned char i;
+  74   1          for (i = 0; i < 5; i++)
+  75   1          {
+  76   2                      pwm_value=(uint)(2750-250*type);
+  77   2              delay_ms(1000);
+  78   2          }
+  79   1      }
+  80          
+  81          void GetBall()
+  82          {        
+  83   1          flag = 1;
+  84   1              P2=~4;
+  85   1          Stop(5); //LR-R
+  86   1          flag = 2;
+  87   1              P2=~8;
+  88   1          Stop(4); //UD-D
+  89   1          flag = 2;
+  90   1              P2=~16;
+  91   1          Stop(7); //UD-U
+  92   1          flag = 1;
+  93   1              P2=~32;
+  94   1          Stop(8); //LR-M
+  95   1          flag = 2;
+  96   1              P2=~64;
+  97   1          Stop(5); //UD-D (45)
+  98   1          flag = 2;
+  99   1              P2=~128;
+ 100   1          Stop(7); //UD-U
+ 101   1      }
  102          
- 103          void main(void) //??????
- 104          {                               
- 105   1              unsigned char i;
- 106   1              delay_ms(500);
- 107   1          InitTimer();         
- 108   1          pwm_value = 1500; 
- 109   1              flag=3;
- 110   1          while (1)
- 111   1          {
- 112   2                      for(i=1;i<9;i++){
- 113   3                              P2=~(1<<(i-1));
- 114   3                              Stop(i);          
- 115   3                              delay_ms(5000);
- 116   3                      }
- 117   2          }
-C51 COMPILER V9.01   EXAMPLE                                                               05/06/2018 21:21:29 PAGE 3   
+ 103          
+ 104          void main(void)
+ 105          {                               
+ 106   1              unsigned char i;
+ 107   1              delay_ms(500);
+ 108   1          InitTimer();         
+ 109   1          pwm_value = 1500; 
+ 110   1              flag=3;
+ 111   1          while (1)
+ 112   1          {
+ 113   2                      Stop(5);
+ 114   2                      Stop(8);          
+ 115   2                      delay_ms(1000);
+ 116   2          }
+ 117   1      }
+C51 COMPILER V9.01   EXAMPLE                                                               05/10/2018 08:12:58 PAGE 3   
 
- 118   1      }
+*** WARNING C280 IN LINE 106 OF EXAMPLE.C: 'i': unreferenced local variable
+ 118          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    319    ----
+   CODE SIZE        =    294    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
@@ -142,4 +143,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

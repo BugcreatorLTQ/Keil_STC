@@ -1,7 +1,7 @@
 #include <reg52.h>
 typedef unsigned int uint;
 typedef unsigned char uchar;
-/*
+
 sbit R1 = P1 ^ 1; //	right	+
 sbit R2 = P1 ^ 0; //	right	-
 sbit L1 = P1 ^ 2; //	left	+
@@ -9,7 +9,8 @@ sbit L2 = P1 ^ 3; //	left	-
 //Sensor Bleak-1
 sbit Sen_L = P1 ^ 5; //	sensor left
 sbit Sen_R = P1 ^ 4; //	sensor right
-*/
+
+sbit Sen_Red = P3 ^ 4;	//Sen Red
 sbit K=P0 ^ 7;
 sbit S1 = P0^1;	
 sbit pwm1 = P0 ^ 5;  //输出PWM信号
@@ -103,14 +104,13 @@ void Stop(unsigned char type)
         delay_ms(1000);
     }
 }
-/*
+
 void Sleep(unsigned char z)
 {
     unsigned char i, j;
-    for (i = 0; i < 255; i++)
-        for (j = 0; j < 255; j++)
-            while (z--)
-                ;
+	while(z--)
+    	for (i = 0; i < 255; i++)
+        	for (j = 0; j < 255; j++);
 }
 
 void Run()
@@ -156,7 +156,7 @@ void CarStop()
  	 
 void Runing()
 {
-	if (Sen_L == 0 && Sen_R == 0)
+	if (Sen_L == 0 && Sen_R == 0) 
 		Run();
 	else if (Sen_L == 1 && Sen_R == 0)
 	    TurnRight();
@@ -166,7 +166,7 @@ void Runing()
 		Down();
 	Sleep(1);	
 }
-*/
+
 void GetBall()
 { 	 
     flag = 1;
@@ -178,7 +178,7 @@ void GetBall()
 
     flag = 2;
 	P2=~8;
-    Stop(4); //UD舵机D位
+    Stop(7); //UD舵机D位
 
 	//--------------
 	flag=3;
@@ -186,44 +186,47 @@ void GetBall()
 
     flag = 4;
 	P2=~16;
-    Stop(8); //UD舵机U位
+    Stop(10); //UD舵机U位
 
     flag = 5;
 	P2=~32;
     Stop(8); //LR-M
 
     flag = 2;
-	P2=~64;
-    Stop(6); //UD舵机D位(45)
+	P2=~64;									   
+    Stop(9); //UD舵机D位(45)
 	
 	flag=3;
 	Stop(5); //open
 
     flag = 2;
 	P2=~128;
-    Stop(7); //UD舵机U位
+    Stop(10); //UD舵机U位
 }
 
 
 void main(void) //主函数
 {		
+	CarStop();
 	delay_ms(500);
     InitTimer();	 
     pwm_value = 1500; 
     flag = 2;
 	P2=~1;
-    Stop(7); //UD舵机U位(45)
+    Stop(10); //UD舵机U位(90)
     flag = 1;
 	P2=~2;
     Stop(8); //LR舵机M位
 	P2=~4;	
 	flag=3;
-	Stop(7);	//open
+	Stop(5);	//open
     while (1)
     {
-		if(S1==0)
+		if(S1==0){
+			CarStop();
 			GetBall();
+		}
 		else
-			P2=~3;
+			Runing();
     }
 }

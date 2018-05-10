@@ -8,53 +8,21 @@ Project File Date:  05/06/2018
 
 <h2>Output:</h2>
 compiling Example.c...
-Example.c - 0 Error(s), 0 Warning(s).
+EXAMPLE.C(106): warning C280: 'i': unreferenced local variable
+Example.c - 0 Error(s), 1 Warning(s).
 Build target 'Target 1'
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?GETBALL?EXAMPLE
-Program Size: data=13.0 xdata=0 code=468
+Program Size: data=13.0 xdata=0 code=451
 creating hex file from "Example"...
 "Example" - 0 Error(s), 1 Warning(s).
 Build target 'Target 1'
 compiling Example.c...
+EXAMPLE.C(106): warning C280: 'i': unreferenced local variable
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?GETBALL?EXAMPLE
-Program Size: data=13.0 xdata=0 code=468
+Program Size: data=13.0 xdata=0 code=451
 creating hex file from "Example"...
-"Example" - 0 Error(s), 1 Warning(s).
-compiling Example.c...
-Example.c - 0 Error(s), 0 Warning(s).
-Build target 'Target 1'
-linking...
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?GETBALL?EXAMPLE
-Program Size: data=13.0 xdata=0 code=458
-creating hex file from "Example"...
-"Example" - 0 Error(s), 1 Warning(s).
-Build target 'Target 1'
-compiling Example.c...
-linking...
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?GETBALL?EXAMPLE
-Program Size: data=13.0 xdata=0 code=458
-creating hex file from "Example"...
-"Example" - 0 Error(s), 1 Warning(s).
-compiling Example.c...
-Example.c - 0 Error(s), 0 Warning(s).
-Build target 'Target 1'
-linking...
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?GETBALL?EXAMPLE
-Program Size: data=13.0 xdata=0 code=476
-creating hex file from "Example"...
-"Example" - 0 Error(s), 1 Warning(s).
-Build target 'Target 1'
-compiling Example.c...
-linking...
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?GETBALL?EXAMPLE
-Program Size: data=13.0 xdata=0 code=476
-creating hex file from "Example"...
-"Example" - 0 Error(s), 1 Warning(s).
+"Example" - 0 Error(s), 2 Warning(s).

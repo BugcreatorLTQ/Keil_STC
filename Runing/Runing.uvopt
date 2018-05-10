@@ -204,10 +204,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>33</ColumnNumber>
+      <ColumnNumber>29</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>49</TopLine>
-      <CurrentLine>71</CurrentLine>
+      <CurrentLine>49</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Runing.c</PathWithFileName>
       <FilenameWithoutPath>Runing.c</FilenameWithoutPath>
@@ -1559,9 +1559,9 @@
       <Documents>
         <Doc>
           <Name>.\Runing.c</Name>
-          <ColumnNumber>33</ColumnNumber>
+          <ColumnNumber>29</ColumnNumber>
           <TopLine>49</TopLine>
-          <CurrentLine>71</CurrentLine>
+          <CurrentLine>49</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>
