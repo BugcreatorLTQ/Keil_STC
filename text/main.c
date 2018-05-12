@@ -7,14 +7,16 @@ sbit R2 = P1 ^ 0; //	right	-
 sbit L1 = P1 ^ 2; //	left	+
 sbit L2 = P1 ^ 3; //	left	-
 //Sensor Bleak-1
+sbit Sen_LR = P1 ^ 7;
 sbit Sen_L = P1 ^ 5; //	sensor left
 sbit Sen_R = P1 ^ 4; //	sensor right
 
 sbit Sen_Red = P3 ^ 4;	//Sen Red
-sbit K=P0 ^ 7;
+sbit K = P0 ^ 7;
 sbit S1 = P0^1;	
 sbit pwm1 = P0 ^ 5;  //输出PWM信号
 sbit pwm2 = P0 ^ 3;
+sbit Last = P0 ^ 4;
 uint pwm_value = 1500; //初值为1.5ms
 uchar flag = 0;        //Flag
 
@@ -54,12 +56,7 @@ void timer0(void) interrupt 1 //定时器0中断函数
 		K = 1;
 		break;
 	case 4:
-		pwm2=1;
-		K=1;
-		break;
-	case 5:
-		pwm1=1;
-		K=1;
+		Last = 1;
 		break;
     }
     TH0 = -20000 / 256;
@@ -82,12 +79,7 @@ void timer1(void) interrupt 3 //定时器1中断函数
 		K = 0;
 		break;	   
 	case 4:
-		pwm2=0;
-		K=0;
-		break;
-	case 5:
-		pwm1=0;
-		K=0;
+		Last = 0;
 		break;
     }
     TH1 = -pwm_value / 256;
@@ -100,7 +92,7 @@ void Stop(unsigned char type)
     unsigned char i;
     for (i = 0; i < 5; i++)
     {
-		pwm_value=(uint)(2750-250*type);
+		pwm_value=(uint)(2725-250*type);
         delay_ms(1000);
     }
 }
@@ -162,8 +154,10 @@ void Runing()
 	    TurnRight();
 	else if (Sen_L == 0 && Sen_R == 1)
 		TurnLeft();
-	else
-		Down();
+	else{
+		Down();	
+		TurnLeft();
+	}
 	Sleep(1);	
 }
 
@@ -174,7 +168,7 @@ void GetBall()
     Stop(5); //LR舵机R位
 							   
 	flag=3;
-	Stop(5); //open
+	Stop(4); //open
 
     flag = 2;
 	P2=~8;
@@ -182,26 +176,23 @@ void GetBall()
 
 	//--------------
 	flag=3;
-	Stop(8); //close
+	Stop(6); //close
 
-    flag = 4;
+    flag = 2;
 	P2=~16;
-    Stop(10); //UD舵机U位
+    Stop(9); //UD舵机U位
 
-    flag = 5;
+    flag = 1;
 	P2=~32;
     Stop(8); //LR-M
 
     flag = 2;
 	P2=~64;									   
-    Stop(9); //UD舵机D位(45)
+    Stop(9); //UD舵机D位
 	
 	flag=3;
-	Stop(5); //open
+	Stop(4); //open
 
-    flag = 2;
-	P2=~128;
-    Stop(10); //UD舵机U位
 }
 
 
@@ -213,15 +204,21 @@ void main(void) //主函数
     pwm_value = 1500; 
     flag = 2;
 	P2=~1;
-    Stop(10); //UD舵机U位(90)
+    Stop(9); //UD舵机U位(90)
     flag = 1;
 	P2=~2;
     Stop(8); //LR舵机M位
 	P2=~4;	
 	flag=3;
-	Stop(5);	//open
+	Stop(4);	//open
     while (1)
     {
+		if(Sen_LR == 0){
+			CarStop();
+			flag = 4;
+			Stop(7);
+			Stop(8);
+		}
 		if(S1==0){
 			CarStop();
 			GetBall();
